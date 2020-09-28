@@ -1,19 +1,32 @@
 {% extends 'base.html.twig' %}
 
 {% block contenedor_principal %}
-	<h1>Categorias</h1>
+	{% include 'common/_mensajes.html.twig' %}
+	<div>
+		<h1 style="display:inline" >Categorias</h1>
+		<a class="btn btn-outline-success mr-2" title="Añadir categoria" href="{{ path('app_add_categoria')}}">
+			<span class="oi oi-plus" title="añadir" aria-hidden="true"></span>
+		</a>
+	</div>
 	<table class="table">
 		<thead>
 			<tr>
 				<th>Nombre</th>
 				<th>Color</th>
+				<th>Acciones</th>
 			</tr>
 		</thead>
 		<tbody>
 			{% for categoria in categorias %}
 				<tr>
 					<td>{{categoria.nombre}}</td>
-                    <td>{{categoria.color}}</td>
+					<td>
+						<div style="height:30px;width:30px;background-color:{{categoria.color}}"></div>
+					</td>
+					<td>
+						<a class="btn btn-link" href="{{ path("app_edit_categoria", {'id': categoria.id}) }}">Editar</a>
+						<a class="btn btn-link" href="{{ path("app_delete_categoria", {'id': categoria.id}) }}">Eliminar</a>
+					</td>
 				</tr>
 			{% endfor %}
 		</tbody>

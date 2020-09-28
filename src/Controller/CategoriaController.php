@@ -55,7 +55,7 @@ class CategoriaController extends AbstractController
                 if (!$nombre) {
                     $this->addFlash('danger', 'Nombre es obligatorio');
                 }
-                
+
                 if (!$color) {
                     $this->addFlash('danger', 'Color es obligatorio');
                 }
@@ -64,5 +64,64 @@ class CategoriaController extends AbstractController
         return $this->render('categoria/add.html.twig', [
             'categoria' => $categoria,
         ]);
+    }
+
+    /**
+     * @Route("/edit/{id}", name="app_edit_categoria")
+     */
+    public function edit(
+        // Symfony hará la union entre el ID que le llega por la URL y categoría, intentando hacer un find automáticamente.
+        // Esto significa que $categoria ya vendrá de la base de datos.
+        Categoria $categoria,
+        EntityManagerInterface $entityManager,
+        Request $request
+    ) {
+        if (
+            $this->isCsrfTokenValid(
+                'categoria',
+                $request->request->get('_token')
+            )
+        ) {
+            $nombre = $request->request->get('nombre');
+            $color = $request->request->get('color');
+
+            $categoria->setNombre($nombre);
+            $categoria->setColor($color);
+
+            if ($nombre && $categoria) {
+                $entityManager->persist($categoria);
+                $entityManager->flush();
+                $this->addFlash('success', 'Categoria editada correctamente');
+                return $this->redirectToRoute('app_list_categoria');
+            } else {
+                if (!$nombre) {
+                    $this->addFlash('danger', 'Nombre es obligatorio');
+                }
+
+                if (!$color) {
+                    $this->addFlash('danger', 'Color es obligatorio');
+                }
+            }
+        }
+        return $this->render('categoria/edit.html.twig', [
+            'categoria' => $categoria,
+        ]);
+    }
+
+    /**
+     * @Route("/delete/{id}", name="app_delete_categoria")
+     */
+    public function delete(
+        // Symfony hará la union entre el ID que le llega por la URL y categoría, intentando hacer un find automáticamente.
+        // Esto significa que $categoria ya vendrá de la base de datos.
+        Categoria $categoria,
+        Request $request
+    ) {
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($categoria);
+        $entityManager->flush();
+        $this->addFlash('success', 'Categoría eliminada correctamente');
+
+        return $this->redirectToRoute('app_list_categoria');
     }
 }
