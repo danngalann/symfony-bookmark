@@ -21,7 +21,7 @@ class CategoriaController extends AbstractController
     {
         $categorias = $categoriaRepository->findAll();
         return $this->render('categoria/index.html.twig', [
-            'categorias' => $categorias
+            'categorias' => $categorias,
         ]);
     }
 
@@ -41,25 +41,28 @@ class CategoriaController extends AbstractController
             )
         ) {
             $nombre = $request->request->get('nombre');
-            // $color = $request->request->get('color');
+            $color = $request->request->get('color');
 
             $categoria->setNombre($nombre);
-            if ($nombre) {
+            $categoria->setColor($color);
+
+            if ($nombre && $categoria) {
                 $entityManager->persist($categoria);
-                $entityManager->flush();                
+                $entityManager->flush();
                 $this->addFlash('success', 'Categoria creada correctamente');
                 return $this->redirectToRoute('app_list_categoria');
             } else {
-                if(!$nombre){
+                if (!$nombre) {
                     $this->addFlash('danger', 'Nombre es obligatorio');
-                }                
+                }
+                
+                if (!$color) {
+                    $this->addFlash('danger', 'Color es obligatorio');
+                }
             }
-
-            
-            // $categoria->setColor($color);
         }
         return $this->render('categoria/add.html.twig', [
-            'categoria' => $categoria
+            'categoria' => $categoria,
         ]);
     }
 }

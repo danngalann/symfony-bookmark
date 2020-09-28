@@ -6,12 +6,14 @@
 		<thead>
 			<tr>
 				<th>Nombre</th>
+				<th>Color</th>
 			</tr>
 		</thead>
 		<tbody>
 			{% for categoria in categorias %}
 				<tr>
 					<td>{{categoria.nombre}}</td>
+                    <td>{{categoria.color}}</td>
 				</tr>
 			{% endfor %}
 		</tbody>
