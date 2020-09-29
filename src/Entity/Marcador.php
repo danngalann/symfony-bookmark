@@ -27,6 +27,7 @@ class Marcador
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
+     * @Assert\Url
      */
     private $url;
 
