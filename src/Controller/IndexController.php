@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\CategoriaRepository;
 use App\Repository\MarcadorRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,13 +10,28 @@ use Symfony\Component\Routing\Annotation\Route;
 class IndexController extends AbstractController
 {
     /**
-     * @Route("/", name="app_index")
+     * @Route(
+     *  "/{categoria}",
+     *  name="app_index",
+     *  defaults= {
+     *      "categoria": ""
+     *  })
      */
-    public function index(MarcadorRepository $marcadorRepository)
+    public function index(string $categoria, CategoriaRepository $categoriaRepository, MarcadorRepository $marcadorRepository)
     {
-        $marcadores = $marcadorRepository->findAll();
+
+        if(!empty($categoria)){
+            if(!$categoriaRepository->findByNombre($categoria)){
+                throw $this->createNotFoundException('La categoria '.$categoria.' no existe');                
+            }
+
+            $marcadores = $marcadorRepository->findByCategoriaName($categoria);
+        } else {
+            $marcadores = $marcadorRepository->findAll();
+        }
+        
         return $this->render('index/index.html.twig', [
-            'marcadores' => $marcadores
+            'marcadores' => $marcadores,
         ]);
     }
 }
