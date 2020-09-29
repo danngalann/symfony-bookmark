@@ -59,7 +59,7 @@ class MarcadorController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="marcador_edit", methods={"GET","POST"})
+     * @Route("/edit/{id}", name="marcador_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Marcador $marcador): Response
     {

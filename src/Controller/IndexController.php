@@ -2,16 +2,20 @@
 
 namespace App\Controller;
 
+use App\Repository\MarcadorRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 class IndexController extends AbstractController
 {
     /**
-     * @Route("/panel", name="app_index")
+     * @Route("/", name="app_index")
      */
-    public function index()
+    public function index(MarcadorRepository $marcadorRepository)
     {
-        return $this->render('index/index.html.twig');
+        $marcadores = $marcadorRepository->findAll();
+        return $this->render('index/index.html.twig', [
+            'marcadores' => $marcadores
+        ]);
     }
 }
