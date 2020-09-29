@@ -15,15 +15,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class MarcadorController extends AbstractController
 {
-    /**
-     * @Route("/", name="marcador_index", methods={"GET"})
-     */
-    public function index(MarcadorRepository $marcadorRepository): Response
-    {
-        return $this->render('marcador/index.html.twig', [
-            'marcadors' => $marcadorRepository->findAll(),
-        ]);
-    }
 
     /**
      * @Route("/new", name="marcador_new", methods={"GET","POST"})
@@ -39,22 +30,14 @@ class MarcadorController extends AbstractController
             $entityManager->persist($marcador);
             $entityManager->flush();
 
-            return $this->redirectToRoute('marcador_index');
+            $this->addFlash('success', 'Marcador añadido correctamente');
+
+            return $this->redirectToRoute('app_index');
         }
 
         return $this->render('marcador/new.html.twig', [
             'marcador' => $marcador,
             'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="marcador_show", methods={"GET"})
-     */
-    public function show(Marcador $marcador): Response
-    {
-        return $this->render('marcador/show.html.twig', [
-            'marcador' => $marcador,
         ]);
     }
 
@@ -68,8 +51,9 @@ class MarcadorController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', 'Marcador editado correctamente');
 
-            return $this->redirectToRoute('marcador_index');
+            return $this->redirectToRoute('app_index');
         }
 
         return $this->render('marcador/edit.html.twig', [
@@ -87,8 +71,9 @@ class MarcadorController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($marcador);
             $entityManager->flush();
+            $this->addFlash('success', 'Marcador eliminado correctamente');
         }
 
-        return $this->redirectToRoute('marcador_index');
+        return $this->redirectToRoute('app_index');
     }
 }
