@@ -21,10 +21,10 @@
 							<span class="d-block">
 								<small>{{marcador.creado|tiempo}}</small>
 							</span>
-							{% if marcador.etiqueta is not empty %}
+							{% if marcador.marcadorEtiquetas is not empty %}
 								<span class="d-block">
-									{% for etiqueta in marcador.etiqueta %}
-										<small>{{etiqueta.nombre ~ (not loop.last ? ', ')}}</small>
+									{% for marcadorEtiqueta in marcador.marcadorEtiquetas %}
+										<small>{{marcadorEtiqueta.etiqueta.nombre ~ "(" ~ marcadorEtiqueta.creado|tiempo ~ ")" ~ (not loop.last ? ', ')}}</small>
 									{% endfor %}
 								</span>
 							{% endif %}

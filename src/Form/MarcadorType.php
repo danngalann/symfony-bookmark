@@ -17,9 +17,9 @@ class MarcadorType extends AbstractType
             ->add('url')
             ->add('categoria')
             ->add('favorito')
-            ->add('etiqueta', Select2EntityType::class, [
+            ->add('etiquetas', Select2EntityType::class, [
                 "multiple" => true,
-                "remote_route" => 'app_buscar_etiquetas',
+                "remote_route" => 'etiqueta_index',
                 "class" => "\App\Entity\Etiqueta",
                 "primary_key" => 'id',
                 "text_property" => 'nombre',
@@ -31,7 +31,8 @@ class MarcadorType extends AbstractType
                     'enabled' => true,
                     "new_tag_text" => '(nuevo)',
                     "tag_separators" => '[","]'
-                ]
+                ],
+                'mapped' => false
             ])
         ;
     }

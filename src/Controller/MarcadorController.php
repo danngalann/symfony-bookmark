@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Marcador;
+use App\Entity\MarcadorEtiqueta;
 use App\Form\MarcadorType;
 use App\Repository\MarcadorRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,7 +16,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class MarcadorController extends AbstractController
 {
-
     /**
      * @Route("/new", name="marcador_new", methods={"GET","POST"})
      */
@@ -28,6 +28,15 @@ class MarcadorController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($marcador);
+            $etiquetas = $form->get('etiquetas')->getData();
+
+            foreach ($etiquetas as $etiqueta) {
+                $marcadorEtiqueta = new MarcadorEtiqueta();
+                $marcadorEtiqueta->setMarcador($marcador);
+                $marcadorEtiqueta->setEtiqueta($etiqueta);
+                $entityManager->persist($marcadorEtiqueta);
+            }
+
             $entityManager->flush();
 
             $this->addFlash('success', 'Marcador añadido correctamente');
@@ -49,11 +58,58 @@ class MarcadorController extends AbstractController
         $form = $this->createForm(MarcadorType::class, $marcador);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-            $this->addFlash('success', 'Marcador editado correctamente');
+        $marcadorEtiquetasActuales = $marcador->getMarcadorEtiquetas();
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $etiquetas = $form->get('etiquetas')->getData();
 
-            return $this->redirectToRoute('app_index');
+                // Para eliminar etiquetas
+                foreach (
+                    $marcadorEtiquetasActuales
+                    as $marcadorEtiquetaActual
+                ) {
+                    $eliminar = true;
+                    $etiquetaActual = $marcadorEtiquetaActual->getEtiqueta();
+                    foreach ($etiquetas as $etiqueta) {
+                        if ($etiquetaActual->getId() == $etiqueta->getId()) {
+                            $eliminar = false;
+                        }
+                    }
+                    if ($eliminar) {
+                        $entityManager->remove($marcadorEtiquetaActual);
+                    }
+                }
+
+                // Para añadir etiquetas
+                foreach ($etiquetas as $etiqueta) {
+                    $crear = true;
+                    foreach (
+                        $marcadorEtiquetasActuales
+                        as $marcadorEtiquetaActual
+                    ) {
+                        if ($etiquetaActual->getId() == $etiqueta->getId()) {
+                            $crear = false;
+                        }
+                    }
+                    if ($crear) {
+                        $marcadorEtiqueta = new MarcadorEtiqueta();
+                        $marcadorEtiqueta->setMarcador($marcador);
+                        $marcadorEtiqueta->setEtiqueta($etiqueta);
+                        $entityManager->persist($marcadorEtiqueta);
+                    }
+                }
+
+                $entityManager->flush();
+                $this->addFlash('success', 'Marcador editado correctamente');
+                return $this->redirectToRoute('app_index');
+            }
+        } else {
+            $etiquetas = [];
+            foreach ($marcadorEtiquetasActuales as $marcadorEtiqueta) {
+                $etiquetas[] = $marcadorEtiqueta->getEtiqueta();
+            }
+            $form->get('etiquetas')->setData($etiquetas);
         }
 
         return $this->render('marcador/edit.html.twig', [
@@ -67,7 +123,12 @@ class MarcadorController extends AbstractController
      */
     public function delete(Request $request, Marcador $marcador): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$marcador->getId(), $request->request->get('_token'))) {
+        if (
+            $this->isCsrfTokenValid(
+                'delete' . $marcador->getId(),
+                $request->request->get('_token')
+            )
+        ) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($marcador);
             $entityManager->flush();
