@@ -27,7 +27,7 @@ class TiempoExtension extends AbstractExtension
       } elseif ($secDiff < 3600) {
         $fechaFormateada = 'Creado hace '.round($secDiff / 60)." minutos";
       } elseif ($secDiff > 3600 && $secDiff < 86400) {
-        $fechaFormateada = 'Creado hace'.round($secDiff / 3600)." horas";
+        $fechaFormateada = 'Creado hace '.round($secDiff / 3600)." horas";
       } elseif ($secDiff > 86400) {
         $fechaFormateada = 'Creado hace '.round($secDiff / 86400)." días";
       }

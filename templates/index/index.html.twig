@@ -34,9 +34,20 @@
 					</div>
 				</div>
 			</div>
+			
 		{% else %}
 			<p>No hay marcadores</p>
 		{% endfor %}
+
+		<div class="mt-3">
+				{{
+					include('common/_paginacion.html.twig', {
+						"per_page_elements": per_page_elements,
+						"n_elements": marcadores.count,
+						"curr_page": page
+					})
+				}}
+			</div>
 
 	</div>
 {% endblock %}

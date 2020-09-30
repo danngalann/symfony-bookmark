@@ -75,7 +75,8 @@
           controller(
             'App\\Controller\\IndexController::search',
             {
-              busqueda: busqueda is defined ? busqueda
+              busqueda: busqueda is defined ? busqueda,
+              page: page is defined ? page : 1
             }
           )
         )

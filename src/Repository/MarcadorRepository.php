@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Marcador;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,23 +20,80 @@ class MarcadorRepository extends ServiceEntityRepository
         parent::__construct($registry, Marcador::class);
     }
 
-    public function findByCategoriaName($nombreCategoria)
+    public function findEverything($page = 1, $per_page_elements = 5)
     {
-        return $this->createQueryBuilder('m')
+        $query = $this->createQueryBuilder('m')
+            ->orderBy('m.creado', 'DESC')
+            ->addOrderBy('m.nombre', 'ASC')
+            ->getQuery();
+
+        return $this->pagination(
+            $query,
+            $page,
+            $per_page_elements
+        );
+    }
+
+    public function findByCategoriaName(
+        $nombreCategoria,
+        $page = 1,
+        $per_page_elements = 5
+    ) {
+        $query = $this->createQueryBuilder('m')
             ->innerJoin('m.categoria', 'c')
             ->where('c.nombre = :nombreCategoria')
             ->setParameter('nombreCategoria', $nombreCategoria)
-            ->getQuery()
-            ->getResult();
+            ->orderBy('m.creado', 'DESC')
+            ->addOrderBy('m.nombre', 'ASC')
+            ->getQuery();
+
+        return $this->pagination(
+            $query,
+            $page,
+            $per_page_elements
+        );
     }
 
-    public function findByName($name)
+    public function pagination($dql, $page = 1, $per_page_elements = 5)
     {
-        return $this->createQueryBuilder('m')
+        $paginator = new Paginator($dql);
+        $paginator
+            ->getQuery()
+            ->setFirstResult($per_page_elements * ($page - 1))
+            ->setMaxResults($per_page_elements);
+
+        return $paginator;
+    }
+
+    public function findByName($name, $page = 1, $per_page_elements = 5)
+    {
+        $query = $this->createQueryBuilder('m')
             ->where('m.nombre LIKE :nombre')
             ->setParameter('nombre', "%$name%")
-            ->getQuery()
-            ->getResult();
+            ->orderBy('m.creado', 'DESC')
+            ->addOrderBy('m.nombre', 'ASC')
+            ->getQuery();
+
+        return $this->pagination(
+            $query,
+            $page,
+            $per_page_elements
+        );
+    }
+
+    public function findByFavorites($page = 1, $per_page_elements = 5)
+    {
+        $query = $this->createQueryBuilder('m')
+            ->where('m.favorito = TRUE')
+            ->orderBy('m.creado', 'DESC')
+            ->addOrderBy('m.nombre', 'ASC')
+            ->getQuery();
+
+        return $this->pagination(
+            $query,
+            $page,
+            $per_page_elements
+        );
     }
 
     // /**
