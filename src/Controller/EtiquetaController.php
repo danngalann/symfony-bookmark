@@ -18,8 +18,16 @@ class EtiquetaController extends AbstractController
     /**
      * @Route("/", name="etiqueta_index", methods={"GET"})
      */
-    public function index(EtiquetaRepository $etiquetaRepository): Response
+    public function index(EtiquetaRepository $etiquetaRepository, Request $request): Response
     {
+        if ($request->isXmlHttpRequest()) {
+            $busqueda = $request->get('q');
+            dump($busqueda);
+            $etiquetas = $etiquetaRepository->buscarPorNombre($busqueda);
+
+            return $this->json($etiquetas);
+        }
+
         return $this->render('etiqueta/index.html.twig', [
             'etiquetas' => $etiquetaRepository->findAll(),
         ]);
@@ -97,24 +105,5 @@ class EtiquetaController extends AbstractController
         }
 
         return $this->redirectToRoute('etiqueta_index');
-    }
-
-    /**
-     * @Route("/", name="app_buscar_etiquetas", methods={"GET"})
-     */
-    public function buscarEtiquetas(
-        EtiquetaRepository $etiquetaRepository,
-        Request $request
-    ): Response {
-        if ($request->isXmlHttpRequest()) {
-            $busqueda = $request->get('q');
-            dump($busqueda);
-            $etiquetas = $etiquetaRepository->buscarPorNombre($busqueda);
-
-            return $this->json($etiquetas);
-        }
-
-        throw $this->createNotFoundException();
-        
     }
 }
