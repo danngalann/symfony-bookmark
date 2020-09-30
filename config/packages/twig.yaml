@@ -1,6 +1,8 @@
 twig:
-    default_path: '%kernel.project_dir%/templates'
-    form_themes: ['bootstrap_4_horizontal_layout.html.twig']
-    globals:
-        formato_fecha: '%app.formato_fecha'
-        categoria_repository: '@App\Repository\CategoriaRepository'
+  default_path: "%kernel.project_dir%/templates"
+  form_themes:
+    - "bootstrap_4_horizontal_layout.html.twig"
+    - "@TetranzSelect2Entity/Form/fields.html.twig"
+  globals:
+    formato_fecha: "%app.formato_fecha"
+    categoria_repository: '@App\Repository\CategoriaRepository'

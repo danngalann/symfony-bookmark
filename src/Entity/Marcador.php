@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Validator as AppAssert;
 use App\Repository\MarcadorRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -50,6 +52,16 @@ class Marcador
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $favorito;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Etiqueta::class, cascade={"persist"})
+     */
+    private $etiqueta;
+
+    public function __construct()
+    {
+        $this->etiqueta = new ArrayCollection();
+    }
 
     /**
      * @ORM\PrePersist
@@ -119,6 +131,32 @@ class Marcador
     public function setFavorito(?bool $favorito): self
     {
         $this->favorito = $favorito;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Etiqueta[]
+     */
+    public function getEtiqueta(): Collection
+    {
+        return $this->etiqueta;
+    }
+
+    public function addEtiquetum(Etiqueta $etiquetum): self
+    {
+        if (!$this->etiqueta->contains($etiquetum)) {
+            $this->etiqueta[] = $etiquetum;
+        }
+
+        return $this;
+    }
+
+    public function removeEtiquetum(Etiqueta $etiquetum): self
+    {
+        if ($this->etiqueta->contains($etiquetum)) {
+            $this->etiqueta->removeElement($etiquetum);
+        }
 
         return $this;
     }

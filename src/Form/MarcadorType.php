@@ -6,6 +6,7 @@ use App\Entity\Marcador;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 
 class MarcadorType extends AbstractType
 {
@@ -16,6 +17,22 @@ class MarcadorType extends AbstractType
             ->add('url')
             ->add('categoria')
             ->add('favorito')
+            ->add('etiqueta', Select2EntityType::class, [
+                "multiple" => true,
+                "remote_route" => 'app_buscar_etiquetas',
+                "class" => "\App\Entity\Etiqueta",
+                "primary_key" => 'id',
+                "text_property" => 'nombre',
+                "minimum_input_length" => 3,
+                "delay" => 3,
+                "cache" => false,
+                "placeholder" => "Selección de etiquetas",
+                "allow_add" => [
+                    'enabled' => true,
+                    "new_tag_text" => '(nuevo)',
+                    "tag_separators" => '[","]'
+                ]
+            ])
         ;
     }
 
