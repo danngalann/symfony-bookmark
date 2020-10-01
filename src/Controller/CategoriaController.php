@@ -33,6 +33,7 @@ class CategoriaController extends AbstractController
         EntityManagerInterface $entityManager,
         Request $request
     ) {
+        $user = $this->getUser();
         $categoria = new Categoria();
         if (
             $this->isCsrfTokenValid(
@@ -45,6 +46,7 @@ class CategoriaController extends AbstractController
 
             $categoria->setNombre($nombre);
             $categoria->setColor($color);
+            $categoria->setUser($user);
 
             if ($nombre && $categoria) {
                 $entityManager->persist($categoria);

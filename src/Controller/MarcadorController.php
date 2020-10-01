@@ -21,16 +21,19 @@ class MarcadorController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $user = $this->getUser();
         $marcador = new Marcador();
         $form = $this->createForm(MarcadorType::class, $marcador);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $marcador->setUser($user);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($marcador);
             $etiquetas = $form->get('etiquetas')->getData();
 
             foreach ($etiquetas as $etiqueta) {
+                $etiqueta->setUser($user);
                 $marcadorEtiqueta = new MarcadorEtiqueta();
                 $marcadorEtiqueta->setMarcador($marcador);
                 $marcadorEtiqueta->setEtiqueta($etiqueta);
@@ -55,6 +58,7 @@ class MarcadorController extends AbstractController
      */
     public function edit(Request $request, Marcador $marcador): Response
     {
+        $user = $this->getUser();
         $form = $this->createForm(MarcadorType::class, $marcador);
         $form->handleRequest($request);
 
@@ -93,6 +97,7 @@ class MarcadorController extends AbstractController
                         }
                     }
                     if ($crear) {
+                        $etiqueta->setUser($user);
                         $marcadorEtiqueta = new MarcadorEtiqueta();
                         $marcadorEtiqueta->setMarcador($marcador);
                         $marcadorEtiqueta->setEtiqueta($etiqueta);

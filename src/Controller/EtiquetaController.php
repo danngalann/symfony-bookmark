@@ -38,11 +38,13 @@ class EtiquetaController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $user = $this->getUser();
         $etiquetum = new Etiqueta();
         $form = $this->createForm(EtiquetaType::class, $etiquetum);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $etiquetum->setUser($user);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($etiquetum);
             $entityManager->flush();

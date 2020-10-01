@@ -7,6 +7,7 @@ use App\Repository\MarcadorRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 class IndexController extends AbstractController
 {
@@ -33,8 +34,15 @@ class IndexController extends AbstractController
         int $page,
         CategoriaRepository $categoriaRepository,
         MarcadorRepository $marcadorRepository,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        Security $security
     ) {
+
+        $user = $security->getUser();
+        if(!$user){
+            return $this->redirectToRoute('app_login');
+        }
+
         $perPageElements = self::PER_PAGE_ELEMENTS;
         $categoria = (int) $categoria > 0 ? (int) $categoria : $categoria; // Check if categoria really is pagination
 

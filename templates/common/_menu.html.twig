@@ -10,97 +10,117 @@
   </button>
 
   <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle"
-          href="#"
-          id="navbarDropdown"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false">
+    {% if app.user %}
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"
+            href="#"
+            id="navbarDropdown"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false">
+            Categorías
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{{ path('app_index') }}">
+              {{ 'Todas'|trans }}
+            </a>
+            {% for categoria in categoria_repository.findAll %}
+              <a class="dropdown-item {{
+                'app_index' == app_ruta and nombre_categoria is empty
+                  ? 'active'
+                }}"
+                href="{{
+                path(
+                  'app_index',
+                  {
+                    categoria: categoria.nombre
+                  }
+                )
+                }}">
+                {{ categoria.nombre }}
+              </a>
+            {% endfor %}
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {{ 'app_favoritos' == app_ruta ? 'active' }}"
+            href="{{ path('app_favoritos') }}">
+            Favoritos
+          </a>
+        </li>
+      </ul>
+      <div class="d-md-flex my-2 my-lg-0">
+        {% if is_granted('ROLE_ADMIN') %}
+          <a class="btn btn-outline-success mr-2 w-100 mb-3 mb-sm-0"
+            title="Gestión de categorias"
+            href="{{ path('user_index') }}">
+            Usuarios
+          </a>
+        {% endif %}
+        <a class="btn btn-outline-success mr-2 w-100 mb-3 mb-sm-0"
+          title="Gestión de categorias"
+          href="{{ path('etiqueta_index') }}">
+          Etiquetas
+        </a>
+        <a class="btn btn-outline-success mr-2 w-100 mb-3 mb-sm-0"
+          title="Gestión de categorias"
+          href="{{ path('app_list_categoria') }}">
           Categorías
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="{{ path('app_index') }}">
-            {{ 'Todas'|trans }}
-          </a>
-          {% for categoria in categoria_repository.findAll %}
-            <a class="dropdown-item {{
-              'app_index' == app_ruta and nombre_categoria is empty
-                ? 'active'
-              }}"
-              href="{{
-              path(
-                'app_index',
-                {
-                  categoria: categoria.nombre
-                }
-              )
-              }}">
-              {{ categoria.nombre }}
-            </a>
-          {% endfor %}
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link {{ 'app_favoritos' == app_ruta ? 'active' }}"
-          href="{{ path('app_favoritos') }}">
-          Favoritos
+        <a class="btn btn-outline-success mr-2 w-100"
+          title="Añadir marcador"
+          href="{{ path('marcador_new') }}">
+          <span class="oi oi-plus" title="añadir" aria-hidden="true"></span>
         </a>
-      </li>
-    </ul>
-    <div class="d-md-flex my-2 my-lg-0">
-      <a class="btn btn-outline-success mr-2 w-100 mb-3 mb-sm-0"
-        title="Gestión de categorias"
-        href="{{ path('etiqueta_index') }}">
-        Etiquetas
-      </a>
-      <a class="btn btn-outline-success mr-2 w-100 mb-3 mb-sm-0"
-        title="Gestión de categorias"
-        href="{{ path('app_list_categoria') }}">
-        Categorías
-      </a>
-      <a class="btn btn-outline-success mr-2 w-100"
-        title="Añadir marcador"
-        href="{{ path('marcador_new') }}">
-        <span class="oi oi-plus" title="añadir" aria-hidden="true"></span>
-      </a>
-    </div>
+      </div>
 
-    {{
-      render(
-        controller(
-          'App\\Controller\\IdiomaController::index',
-          {
-            ruta: app_ruta
-          }
-        )
-      )
-    }}
-
-    {% if formulario_busqueda is defined %}
       {{
-        include(
-          'busqueda/_busqueda.html.twig',
-          {
-            formulario_busqueda: formulario_busqueda
-          }
+        render(
+          controller(
+            'App\\Controller\\IdiomaController::index',
+            {
+              ruta: app_ruta
+            }
+          )
         )
       }}
+
+      {% if formulario_busqueda is defined %}
+        {{
+          include(
+            'busqueda/_busqueda.html.twig',
+            {
+              formulario_busqueda: formulario_busqueda
+            }
+          )
+        }}
+      {% else %}
+        {{
+          render(
+            controller(
+              'App\\Controller\\BusquedaController::search',
+              {
+                busqueda: busqueda is defined ? busqueda,
+                page: page is defined ? page : 1
+              }
+            )
+          )
+        }}
+      {% endif %}
+      {% include 'user/_cerrar_sesion.html.twig' %}
     {% else %}
       {{
         render(
           controller(
-            'App\\Controller\\BusquedaController::search',
+            'App\\Controller\\IdiomaController::index',
             {
-              busqueda: busqueda is defined ? busqueda,
-              page: page is defined ? page : 1
+              ruta: app_ruta
             }
           )
         )
       }}
     {% endif %}
-    {% include 'user/_cerrar_sesion.html.twig' %}
   </div>
 </nav>
