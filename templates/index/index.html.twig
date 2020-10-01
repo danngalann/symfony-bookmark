@@ -19,7 +19,7 @@
 							</a>
 							<span class="d-block">{{marcador.categoria}}</span>
 							<span class="d-block">
-								<small>{{marcador.creado|tiempo}}</small>
+								<small>{{marcador.creado|tiempo}} por {{marcador.user.email}}</small>
 							</span>
 							{% if marcador.marcadorEtiquetas is not empty %}
 								<span class="d-block">

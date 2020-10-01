@@ -13,11 +13,12 @@ class MarcadorFixtures extends Fixture implements DependentFixtureInterface
     {
         for ($i = 0; $i < 10; $i++) {
             $marcador = new marcador();
-            $marcador->setNombre('Google '.$i);
+            $marcador->setNombre('Google ' . $i);
             $marcador->setUrl('http://google.com');
             $marcador->setCategoria(
                 $this->getReference(CategoriaFixtures::CATEGORIA_INTERNET_REF)
             );
+            $marcador->setUser($this->getReference(UsuarioFixtures::USER_REF));
 
             $manager->persist($marcador);
             $manager->flush();
@@ -26,6 +27,6 @@ class MarcadorFixtures extends Fixture implements DependentFixtureInterface
 
     public function getDependencies()
     {
-        return [CategoriaFixtures::class];
+        return [UsuarioFixtures::class, CategoriaFixtures::class];
     }
 }
