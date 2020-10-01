@@ -80,7 +80,7 @@
     {% if formulario_busqueda is defined %}
       {{
         include(
-          'common/_busqueda.html.twig',
+          'busqueda/_busqueda.html.twig',
           {
             formulario_busqueda: formulario_busqueda
           }
@@ -90,7 +90,7 @@
       {{
         render(
           controller(
-            'App\\Controller\\IndexController::search',
+            'App\\Controller\\BusquedaController::search',
             {
               busqueda: busqueda is defined ? busqueda,
               page: page is defined ? page : 1
