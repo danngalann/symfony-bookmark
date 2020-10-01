@@ -22,7 +22,7 @@
           Categorías
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="{{ path('app_index') }}">Todas</a>
+          <a class="dropdown-item" href="{{ path('app_index') }}">{{"Todas"|trans}}</a>
           {% for categoria in categoria_repository.findAll %}
             <a class="dropdown-item {{
               'app_index' == app_ruta and nombre_categoria is empty
@@ -65,6 +65,18 @@
         <span class="oi oi-plus" title="añadir" aria-hidden="true"></span>
       </a>
     </div>
+
+    {{
+      render(
+        controller(
+          'App\\Controller\\IdiomaController::index',
+          {
+            ruta: app_ruta
+          }
+        )
+      )
+    }}
+
     {% if formulario_busqueda is defined %}
       {{
         include(

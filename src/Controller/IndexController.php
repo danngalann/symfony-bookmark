@@ -6,6 +6,7 @@ use App\Form\BuscadorType;
 use App\Repository\CategoriaRepository;
 use App\Repository\MarcadorRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -145,7 +146,8 @@ class IndexController extends AbstractController
         string $categoria,
         int $page,
         CategoriaRepository $categoriaRepository,
-        MarcadorRepository $marcadorRepository
+        MarcadorRepository $marcadorRepository,
+        TranslatorInterface $translator
     ) {
         $perPageElements = self::PER_PAGE_ELEMENTS;
         $categoria = (int) $categoria > 0 ? (int) $categoria : $categoria; // Check if categoria really is pagination
@@ -158,7 +160,9 @@ class IndexController extends AbstractController
         if ($categoria && 'todas' != $categoria) {
             if (!$categoriaRepository->findByNombre($categoria)) {
                 throw $this->createNotFoundException(
-                    'La categoria ' . $categoria . ' no existe'
+                    $translator->trans('La categoria "{categoria}" no existe', [
+                        '{cateogoria}' => $categoria
+                    ], 'messages')                    
                 );
             }
 

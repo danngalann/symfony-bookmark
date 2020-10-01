@@ -4,5 +4,6 @@ twig:
     - "bootstrap_4_horizontal_layout.html.twig"
     - "@TetranzSelect2Entity/Form/fields.html.twig"
   globals:
-    formato_fecha: "%app.formato_fecha"
+    formato_fecha: "%app.formato_fecha%"
     categoria_repository: '@App\Repository\CategoriaRepository'
+    listado_idiomas: "%app.listado_idiomas%"

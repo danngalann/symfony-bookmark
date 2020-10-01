@@ -1,0 +1,30 @@
+<div class="dropdown">
+  <a href="#"
+    class="btn btn-outline-primary dropdown-toggle"
+    role="button"
+    id="selectorIdioma"
+    data-toggle="dropdown">
+    {{ idioma_actual }}
+  </a>
+  <div class="dropdown-menu" aria-labelledby="selectorIdioma">
+    {% for lenguaje, nombreLenguaje in listado_idiomas %}
+      <form action="{{
+        path(
+          'app_idioma',
+          {
+            '_locale': lenguaje
+          }
+        )
+        }}"
+        method="POST">
+        <input type="hidden" name="ruta" value="{{ ruta }}" />
+        <button class="btn dropdown-item {{
+          idioma_actual == lenguaje
+            ? 'active'
+          }}">
+          {{ nombreLenguaje }}
+        </button>
+      </form>
+    {% endfor %}
+  </div>
+</div>

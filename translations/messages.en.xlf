@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="es" target-language="en" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="BbuWwlU" resname="La categoria &quot;{categoria}&quot; no existe">
+        <source>La categoria "{categoria}" no existe</source>
+        <target>Category "{categoria}" doesn't exist</target>
+      </trans-unit>
+      <trans-unit id="r.TRnW7" resname="Todas">
+        <source>Todas</source>
+        <target>All</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
