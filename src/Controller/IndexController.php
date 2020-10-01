@@ -135,6 +135,9 @@ class IndexController extends AbstractController
      *  },
      *  requirements={
      *      "page"="\d+"
+     *  },
+     *  methods={
+     *      "GET"
      *  }
      * )
      */
