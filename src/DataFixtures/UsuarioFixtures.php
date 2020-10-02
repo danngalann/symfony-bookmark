@@ -42,6 +42,7 @@ class UsuarioFixtures extends Fixture
         $user->setEmail('user@user.com');
         $user->setRoles(['ROLE_USER']);
         $user->setPassword($this->passEncoder->encodePassword($user, '12345'));
+        $user->setIsVerified(true);
 
         $manager->persist($user);
         $manager->flush();
