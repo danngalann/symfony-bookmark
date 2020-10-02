@@ -26,7 +26,7 @@
             <a class="dropdown-item" href="{{ path('app_index') }}">
               {{ 'Todas'|trans }}
             </a>
-            {% for categoria in categoria_repository.findAll %}
+            {% for categoria in categoria_repository.findAllByUser %}
               <a class="dropdown-item {{
                 'app_index' == app_ruta and nombre_categoria is empty
                   ? 'active'

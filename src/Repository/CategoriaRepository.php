@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Categoria;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method Categoria|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +15,19 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CategoriaRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+
+    private $user;
+
+    public function __construct(Security $security, ManagerRegistry $registry)
     {
         parent::__construct($registry, Categoria::class);
+        $this->user = $security->getUser();
+    }
+
+    public function findAllByUser(){
+        return $this->findByUser($this->user, [
+            'nombre' => 'ASC'
+        ]);
     }
 
     // /**

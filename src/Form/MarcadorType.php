@@ -2,7 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\Categoria;
 use App\Entity\Marcador;
+use App\Repository\CategoriaRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -10,12 +13,23 @@ use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 
 class MarcadorType extends AbstractType
 {
+
+    private $categoriaRepository;
+
+    public function __construct(CategoriaRepository $categoriaRepository)
+    {
+        $this->categoriaRepository = $categoriaRepository;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('nombre')
             ->add('url')
-            ->add('categoria')
+            ->add('categoria', EntityType::class, [
+                'class' => Categoria::class,
+                'choices' => $this->categoriaRepository->findAllByUser()
+            ])
             ->add('favorito')
             ->add('etiquetas', Select2EntityType::class, [
                 "multiple" => true,

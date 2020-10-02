@@ -7,11 +7,11 @@
     <body>
       <trans-unit id="BbuWwlU" resname="La categoria &quot;{categoria}&quot; no existe">
         <source>La categoria "{categoria}" no existe</source>
-        <target>__La categoria "{categoria}" no existe</target>
+        <target>La categoria "{categoria}" no existe</target>
       </trans-unit>
       <trans-unit id="r.TRnW7" resname="Todas">
         <source>Todas</source>
-        <target>__Todas</target>
+        <target>Todas</target>
       </trans-unit>
     </body>
   </file>

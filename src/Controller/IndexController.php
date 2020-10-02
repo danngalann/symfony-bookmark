@@ -52,7 +52,10 @@ class IndexController extends AbstractController
         }
 
         if ($categoria && 'todas' != $categoria) {
-            if (!$categoriaRepository->findByNombre($categoria)) {
+            if (!$categoriaRepository->findBy([
+                    'nombre' => $categoria,
+                    'user' => $this->getUser()
+                ])) {
                 throw $this->createNotFoundException(
                     $translator->trans('La categoria "{categoria}" no existe', [
                         '{cateogoria}' => $categoria

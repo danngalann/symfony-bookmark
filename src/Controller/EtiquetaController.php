@@ -29,7 +29,9 @@ class EtiquetaController extends AbstractController
         }
 
         return $this->render('etiqueta/index.html.twig', [
-            'etiquetas' => $etiquetaRepository->findAll(),
+            'etiquetas' => $etiquetaRepository->findBy([
+                'user' => $this->getUser()
+            ]),
         ]);
     }
 

@@ -19,12 +19,15 @@
 							</a>
 							<span class="d-block">{{marcador.categoria}}</span>
 							<span class="d-block">
-								<small>{{marcador.creado|tiempo}} por {{marcador.user.email}}</small>
+								<small>{{marcador.creado|tiempo}}</small>
+								{% if is_granted('ROLE_ADMIN')%}
+									<small>Creado por {{marcador.user.email}}</small>
+								{% endif %}
 							</span>
 							{% if marcador.marcadorEtiquetas is not empty %}
 								<span class="d-block">
 									{% for marcadorEtiqueta in marcador.marcadorEtiquetas %}
-										<small>{{marcadorEtiqueta.etiqueta.nombre ~ "(" ~ marcadorEtiqueta.creado|tiempo ~ ")" ~ (not loop.last ? ', ')}}</small>
+										<small>{{marcadorEtiqueta.etiqueta.nombre ~ (not loop.last ? ', ')}}</small>
 									{% endfor %}
 								</span>
 							{% endif %}

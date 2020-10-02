@@ -6,6 +6,7 @@ use App\Entity\Marcador;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method Marcador|null find($id, $lockMode = null, $lockVersion = null)
@@ -15,14 +16,20 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class MarcadorRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+
+    private $user;
+
+    public function __construct(Security $security, ManagerRegistry $registry)
     {
         parent::__construct($registry, Marcador::class);
+        $this->user = $security->getUser();
     }
 
     public function findEverything($page = 1, $per_page_elements = 5)
     {
         $query = $this->createQueryBuilder('m')
+            ->where('m.user = :user')
+            ->setParameter('user', $this->user)
             ->orderBy('m.creado', 'DESC')
             ->addOrderBy('m.nombre', 'ASC')
             ->getQuery();
@@ -69,6 +76,8 @@ class MarcadorRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('m')
             ->where('m.nombre LIKE :nombre')
+            ->andWhere('m.user = :user')
+            ->setParameter('user', $this->user)
             ->setParameter('nombre', "%$name%")
             ->orderBy('m.creado', 'DESC')
             ->addOrderBy('m.nombre', 'ASC')
@@ -85,6 +94,8 @@ class MarcadorRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('m')
             ->where('m.favorito = TRUE')
+            ->andWhere('m.user = :user')
+            ->setParameter('user', $this->user)
             ->orderBy('m.creado', 'DESC')
             ->addOrderBy('m.nombre', 'ASC')
             ->getQuery();

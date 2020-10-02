@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Etiqueta;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method Etiqueta|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,17 +15,23 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class EtiquetaRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+
+    private $user;
+
+    public function __construct(Security $security, ManagerRegistry $registry)
     {
         parent::__construct($registry, Etiqueta::class);
+        $this->user = $security->getUser();
     }
 
     public function buscarPorNombre($nombre)
     {
         return $this->createQueryBuilder('e')
             ->select("e.id, e.nombre as text")
-            ->where('e.nombre LIKE :nombre')
-            ->setParameter('nombre', "%$nombre%")
+            ->where('e.user = :user')
+            ->andWhere('e.nombre LIKE :nombre')
+            ->setParameter('user', $this->user)
+            ->setParameter('nombre', "%$nombre%")            
             ->orderBy("e.nombre", "ASC")
             ->getQuery()
             ->getResult();
