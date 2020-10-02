@@ -22,6 +22,7 @@ class BuscadorType extends AbstractType
                     'placeholder' => 'Buscar',
                     'class' => 'form-control mr-sm-2',
                 ],
+                'mapped' => false
             ])
             ->add('buscar', SubmitType::class, [
               'label' => 'Buscar',
@@ -29,12 +30,5 @@ class BuscadorType extends AbstractType
                 'class' => 'btn-outline-primary my-2 my-sm-0'
               ]
             ]);
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'data_class' => Marcador::class,
-        ]);
     }
 }
