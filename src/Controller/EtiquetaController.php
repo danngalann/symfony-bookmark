@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Etiqueta;
 use App\Form\EtiquetaType;
 use App\Repository\EtiquetaRepository;
+use App\Security\Voter\CRUDVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,6 +76,7 @@ class EtiquetaController extends AbstractController
      */
     public function edit(Request $request, Etiqueta $etiquetum): Response
     {
+        $this->denyAccessUnlessGranted(CRUDVoter::EDITAR, $etiquetum);
         $form = $this->createForm(EtiquetaType::class, $etiquetum);
         $form->handleRequest($request);
 
@@ -97,6 +99,7 @@ class EtiquetaController extends AbstractController
      */
     public function delete(Request $request, Etiqueta $etiquetum): Response
     {
+        $this->denyAccessUnlessGranted(CRUDVoter::ELIMINAR, $etiquetum);
         if (
             $this->isCsrfTokenValid(
                 'delete' . $etiquetum->getId(),

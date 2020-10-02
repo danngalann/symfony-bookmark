@@ -6,6 +6,7 @@ use App\Entity\Marcador;
 use App\Entity\MarcadorEtiqueta;
 use App\Form\MarcadorType;
 use App\Repository\MarcadorRepository;
+use App\Security\Voter\CRUDVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,6 +59,9 @@ class MarcadorController extends AbstractController
      */
     public function edit(Request $request, Marcador $marcador): Response
     {
+
+        $this->denyAccessUnlessGranted(CRUDVoter::EDITAR, $marcador);
+
         $user = $this->getUser();
         $form = $this->createForm(MarcadorType::class, $marcador);
         $form->handleRequest($request);
@@ -128,6 +132,9 @@ class MarcadorController extends AbstractController
      */
     public function delete(Request $request, Marcador $marcador): Response
     {
+
+        $this->denyAccessUnlessGranted(CRUDVoter::ELIMINAR, $marcador);
+
         if (
             $this->isCsrfTokenValid(
                 'delete' . $marcador->getId(),
